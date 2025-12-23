@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* stackTop = NULL;
+struct Node* queueFront = NULL;
+struct Node* queueRear = NULL;
+
+void push(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = stackTop;
+    stackTop = newNode;
+}
+
+int pop() {
+    if (stackTop == NULL) return -1;
+    struct Node* temp = stackTop;
+    int val = temp->data;
+    stackTop = stackTop->next;
+    free(temp);
+    return val;
+}
+
+void enqueue(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+
+    if (queueRear == NULL) {
+        queueFront = queueRear = newNode;
+        return;
+    }
+
+    queueRear->next = newNode;
+    queueRear = newNode;
+}
+
+int dequeue() {
+    if (queueFront == NULL) return -1;
+    struct Node* temp = queueFront;
+    int val = temp->data;
+    queueFront = queueFront->next;
+
+    if (queueFront == NULL) queueRear = NULL;
+    free(temp);
+    return val;
+}
+
+void displayStack() {
+    struct Node* temp = stackTop;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+void displayQueue() {
+    struct Node* temp = queueFront;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    push(10);
+    push(20);
+    push(30);
+    displayStack();
+    pop();
+    displayStack();
+
+    enqueue(5);
+    enqueue(15);
+    enqueue(25);
+    displayQueue();
+    dequeue();
+    displayQueue();
+
+    return 0;
+}
